@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Citas Médicas</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>Sistema de Citas Médicas</h1>
+      <p>Agenda tu cita de manera fácil y rápida</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="register">Registro de Paciente</button>
+      <button class="tab-btn" data-tab="appointment">Agendar Cita</button>
+      <button class="tab-btn" data-tab="list">Mis Citas</button>
+    </nav>
+
+    <!-- Tab Contents -->
+    <main class="tab-content">
+      
+      <!-- Patient Registration Form -->
+      <section id="register" class="tab-panel active">
+        <h2>Registro de Paciente</h2>
+        <form id="patient-form" novalidate>
+          <div class="form-group">
+            <label for="patient-name">Nombre Completo *</label>
+            <input 
+              type="text" 
+              id="patient-name" 
+              name="name" 
+              placeholder="Ej: Juan Pérez"
+              required
+            >
+            <span class="error-message" id="name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="patient-email">Correo Electrónico *</label>
+            <input 
+              type="email" 
+              id="patient-email" 
+              name="email" 
+              placeholder="Ej: juan@email.com"
+              required
+            >
+            <span class="error-message" id="email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="patient-phone">Teléfono *</label>
+            <input 
+              type="tel" 
+              id="patient-phone" 
+              name="phone" 
+              placeholder="Ej: 3001234567"
+              required
+            >
+            <span class="error-message" id="phone-error"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="register-btn">
+            Registrar Paciente
+          </button>
+        </form>
+
+        <!-- Registered Patient Info -->
+        <div id="patient-info" class="info-card hidden">
+          <h3>Paciente Registrado</h3>
+          <p><strong>Nombre:</strong> <span id="registered-name"></span></p>
+          <p><strong>Email:</strong> <span id="registered-email"></span></p>
+          <p><strong>Teléfono:</strong> <span id="registered-phone"></span></p>
+          <button class="btn btn-secondary" id="go-to-appointment">
+            Agendar una Cita →
+          </button>
+        </div>
+      </section>
+
+      <!-- Appointment Scheduling Form -->
+      <section id="appointment" class="tab-panel">
+        <h2>Agendar Cita</h2>
+        
+        <!-- Patient Selection -->
+        <div id="patient-selection" class="form-group">
+          <label for="select-patient">Seleccionar Paciente *</label>
+          <select id="select-patient" required>
+            <option value="">-- Seleccione un paciente --</option>
+          </select>
+          <span class="error-message" id="patient-select-error"></span>
+        </div>
+
+        <form id="appointment-form" novalidate>
+          <div class="form-group">
+            <label for="select-doctor">Doctor *</label>
+            <select id="select-doctor" required>
+              <option value="">-- Seleccione un doctor --</option>
+            </select>
+            <span class="error-message" id="doctor-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="appointment-date">Fecha *</label>
+            <input 
+              type="date" 
+              id="appointment-date" 
+              name="date" 
+              required
+            >
+            <span class="error-message" id="date-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="select-time">Hora *</label>
+            <select id="select-time" required disabled>
+              <option value="">-- Primero seleccione doctor y fecha --</option>
+            </select>
+            <span class="error-message" id="time-error"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="appointment-btn">
+            Agendar Cita
+          </button>
+        </form>
+
+        <!-- Appointment Confirmation -->
+        <div id="appointment-confirmation" class="info-card hidden">
+          <h3>Cita Agendada</h3>
+          <p><strong>Doctor:</strong> <span id="confirmed-doctor"></span></p>
+          <p><strong>Fecha:</strong> <span id="confirmed-date"></span></p>
+          <p><strong>Hora:</strong> <span id="confirmed-time"></span></p>
+          <button class="btn btn-secondary" id="go-to-list">
+            Ver Mis Citas →
+          </button>
+        </div>
+      </section>
+
+      <!-- Appointments List -->
+      <section id="list" class="tab-panel">
+        <h2>Citas Agendadas</h2>
+        
+        <div id="appointments-container">
+          <div id="no-appointments" class="empty-state">
+            <p>No hay citas agendadas</p>
+            <button class="btn btn-secondary" id="go-to-schedule">
+              Agendar una Cita
+            </button>
+          </div>
+
+          <div id="appointments-list" class="appointments-grid"></div>
+        </div>
+
+        <button class="btn btn-outline" id="refresh-appointments">
+          Actualizar Lista
+        </button>
+      </section>
+
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+  </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div id="cancel-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Cancelar Cita</h3>
+      <p>¿Está seguro que desea cancelar esta cita?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modal-cancel">No, mantener</button>
+        <button class="btn btn-danger" id="modal-confirm">Sí, cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html> 
