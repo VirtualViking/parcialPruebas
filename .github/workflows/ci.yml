@@ -11,42 +11,63 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    # Checkout code
     - name: Checkout code
       uses: actions/checkout@v4
     
+    # Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
     
+    # Install dependencies
     - name: Install dependencies
       run: npm ci
     
+    # Run unit tests
     - name: Run unit tests
       run: npm run test:unit
     
+    # Run integration tests
     - name: Run integration tests
       run: npm run test:integration
     
-    - name: Setup Chrome for Selenium
+    # Setup Chrome for Selenium E2E tests
+    - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: stable
     
+    # Setup ChromeDriver
     - name: Setup ChromeDriver
       uses: nanasess/setup-chromedriver@v2
     
+    # Start server in background for E2E tests
     - name: Start server for E2E tests
       run: |
         npm start &
+        echo "Waiting for server to start..."
         sleep 5
+        curl -f http://localhost:3000/api/health || exit 1
+        echo "Server is ready!"
       env:
         PORT: 3000
     
+    # Run Selenium E2E tests
     - name: Run Selenium E2E tests
       run: npm run test:selenium
       env:
-        HEADLESS: true
+        HEADLESS: 'true'
+        CI: 'true'
+        BASE_URL: 'http://localhost:3000'
     
+    # Print OK if all tests passed
     - name: All tests passed
       if: success()
-      run: echo "OK"
+      run: |
+        echo ""
+        echo "         ALL TESTS PASSED           "
+        echo ""
+        echo "OK"
