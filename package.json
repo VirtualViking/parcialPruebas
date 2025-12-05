@@ -1,0 +1,45 @@
+{
+  "name": "medical-appointments-system",
+  "version": "1.0.0",
+  "description": "Sistema de reserva de citas médicas con API REST y frontend",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "nodemon backend/src/server.js",
+    "test:unit": "jest backend/src/tests/unit --coverage",
+    "test:integration": "jest backend/src/tests/integration --coverage",
+    "test:selenium": "jest tests/selenium --testTimeout=60000",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:selenium",
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "medical",
+    "appointments",
+    "api",
+    "rest",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "selenium-webdriver": "^4.15.0",
+    "supertest": "^6.3.3",
+    "chromedriver": "^119.0.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "backend/src/**/*.js",
+      "!backend/src/server.js"
+    ],
+    "coverageDirectory": "coverage",
+    "verbose": true
+  }
+}
