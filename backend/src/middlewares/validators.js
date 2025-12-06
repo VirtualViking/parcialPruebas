@@ -30,11 +30,18 @@ const validateDate = (date) => {
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
   if (!dateRegex.test(date)) return false;
   
-  const parsedDate = new Date(date);
+  // Parse date parts to avoid timezone issues
+  const [year, month, day] = date.split('-').map(Number);
+  const parsedDate = new Date(year, month - 1, day);
+  
+  // Check if date is valid
+  if (isNaN(parsedDate.getTime())) return false;
+  
+  // Get today without time component
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  return parsedDate >= today && !isNaN(parsedDate.getTime());
+  return parsedDate >= today;
 };
 
 const validateTime = (time, validSlots) => {
